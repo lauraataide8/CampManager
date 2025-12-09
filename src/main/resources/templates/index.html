@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampManager | Home</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        /* --- PALETA DE CORES & VARIÁVEIS --- */
+        :root {
+            --cm-bg-main: #051228;      /* Azul marinho ultra profundo */
+            --cm-bg-secondary: #022143; /* Azul marinho médio (cards, asides) */
+            --cm-bg-tertiary: #011531;  /* Azul para contrastes */
+            --cm-gold: #84734d;         /* Dourado fosco premium */
+            --cm-gold-bright: #a89465;  /* Dourado brilhante para hover */
+            --cm-text-light: #e6e6e6;   /* Texto claro */
+            --cm-text-muted: #b0b0b0;   /* Texto secundário */
+            --sidebar-width: 260px;     /* Largura da barra lateral desktop */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--cm-bg-main);
+            color: var(--cm-text-light);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: grid;
+            grid-template-rows: auto 1fr auto; /* Header, Conteúdo, Footer */
+            min-height: 100vh;
+        }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- 1. HEADER CABEÇALHO --- */
+        .main-header {
+            background-color: var(--cm-bg-secondary);
+            border-bottom: 3px solid var(--cm-gold);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content-between;
+            align-items: center;
+            grid-row: 1 / 2;
+            z-index: 100;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        /* Configuração da Imagem da Logo */
+        .logo-img {
+            height: 50px; /* Altura fixa para manter o padrão */
+            width: auto;  /* Largura automática para não distorcer */
+            margin-right: 15px;
+            /* Opcional: se sua logo for muito escura, este filtro ajuda a destacar */
+            /* filter: drop-shadow(0 0 2px var(--cm-gold)); */
+        }
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--cm-gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .hamburger-btn {
+            display: none; /* Escondido no desktop */
+            font-size: 2rem;
+            color: var(--cm-gold);
+            cursor: pointer;
+        }
+
+        /* --- LAYOUT GRID PRINCIPAL (Desktop) --- */
+        .layout-grid {
+            display: grid;
+            /* Menu Esq | Conteúdo Central | Aside Dir */
+            grid-template-columns: var(--sidebar-width) 1fr 280px;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* --- 2. SIDEBAR ESQUERDA (Menu Vertical) --- */
+        .sidebar-left {
+            background-color: var(--cm-bg-secondary);
+            border-right: 1px solid rgba(132, 115, 77, 0.3);
+            border-radius: 8px;
+            padding: 2rem 1rem;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .nav-menu-title {
+            color: var(--cm-text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            padding-left: 1rem;
+        }
+        .nav-item { margin-bottom: 0.5rem; }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: var(--cm-text-light);
+            border-radius: 6px;
+            /* ANIMAÇÃO DE ESMAECIMENTO E DESLIZE SOLICITADA */
+            transition: all 0.3s ease;
+            opacity: 0.8;
+            border-left: 3px solid transparent;
+        }
+        .nav-link i { margin-right: 12px; font-size: 1.2rem; color: var(--cm-gold); transition: 0.3s; }
+        .nav-link:hover {
+            background-color: var(--cm-bg-tertiary);
+            color: var(--cm-gold-bright);
+            opacity: 1;
+            transform: translateX(5px); /* Desliza para direita */
+            border-left: 3px solid var(--cm-gold); /* Barra dourada aparece */
+        }
+        .nav-link:hover i { transform: scale(1.1); }
+
+
+        /* --- 3. ARTICLE CENTRAL (Conteúdo Principal) --- */
+        .central-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .featured-article {
+            background-color: var(--cm-bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(132, 115, 77, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .article-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 2px solid var(--cm-gold);
+        }
+        .article-title-h1 {
+            color: var(--cm-gold);
+            text-transform: uppercase;
+            font-weight: 800;
+            font-size: 2rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        .article-title-h1 i { margin-right: 15px; }
+        
+        /* Container da Imagem do Jogo */
+        .game-image-container {
+            width: 100%;
+            height: 400px; /* Altura fixa para destaque */
+            position: relative;
+            background-color: #000;
+        }
+        .game-feature-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Garante que a imagem preencha sem distorcer */
+            object-position: center top;
+            opacity: 0.9;
+        }
+        /* Overlay para texto sobre a imagem */
+        .game-overlay-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+            background: linear-gradient(to top, var(--cm-bg-main), transparent);
+        }
+        .game-name-overlay { font-size: 2.5rem; color: var(--cm-gold); font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+        
+        .article-body { padding: 2rem; }
+        .article-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--cm-text-light);
+        }
+        .highlight-gold { color: var(--cm-gold-bright); font-weight: bold; }
+
+        /* --- CTAs (ABAIXO DO ARTIGO CENTRAL) --- */
+        .cta-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .cta-card {
+            background: linear-gradient(145deg, var(--cm-bg-secondary), var(--cm-bg-tertiary));
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(132, 115, 77, 0.3);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cta-card:hover { transform: translateY(-5px); border-color: var(--cm-gold); box-shadow: 0 5px 20px rgba(132, 115, 77, 0.2); }
+        .cta-icon { font-size: 3rem; color: var(--cm-gold); margin-bottom: 1rem; }
+        .cta-title { font-weight: bold; margin-bottom: 0.5rem; color: white; }
+        .cta-text { font-size: 0.9rem; color: var(--cm-text-muted); margin-bottom: 1.5rem; }
+        .btn-cta-gold {
+            background-color: var(--cm-gold);
+            color: var(--cm-bg-main);
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.3s;
+            width: 100%;
+            display: inline-block;
+        }
+        .btn-cta-gold:hover { background-color: var(--cm-gold-bright); color: white; }
+        .btn-cta-outline {
+            border: 2px solid var(--cm-gold);
+            color: var(--cm-gold);
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.3s;
+            width: 100%;
+             display: inline-block;
+        }
+        .btn-cta-outline:hover { background-color: var(--cm-gold); color: var(--cm-bg-main); }
+
+
+        /* --- 4. ASIDE DIRETO --- */
+        .sidebar-right {
+            background-color: var(--cm-bg-secondary);
+            border-left: 1px solid rgba(132, 115, 77, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            height: fit-content;
+        }
+        .aside-title { color: var(--cm-gold); border-bottom: 1px solid var(--cm-gold); padding-bottom: 0.5rem; margin-bottom: 1rem; font-size: 1.2rem; }
+        .quick-link-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: var(--cm-text-muted);
+            transition: 0.2s;
+            display: block;
+        }
+        .quick-link-item:hover { color: var(--cm-gold); padding-left: 5px; }
+
+
+        /* --- 5. FOOTER RODAPÉ --- */
+        .main-footer {
+            background-color: var(--cm-bg-secondary);
+            border-top: 3px solid var(--cm-gold);
+            padding: 2rem;
+            text-align: center;
+            margin-top: auto;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .footer-link { color: var(--cm-text-light); transition: 0.3s; font-size: 0.9rem; }
+        .footer-link:hover { color: var(--cm-gold); }
+        .footer-copy { color: var(--cm-text-muted); font-size: 0.8rem; }
+
+
+        /* --- 6. WHATSAPP FLUTUANTE ICON --- */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366; /* Verde oficial do Whats */
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.4);
+            z-index: 999;
+            transition: 0.3s;
+            border: 2px solid var(--cm-gold); /* Borda dourada para integrar */
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background-color: var(--cm-gold); /* Muda para dourado ao passar o mouse */
+            color: var(--cm-bg-main);
+        }
+
+        /* --- RESPONSIVIDADE (MOBILE) --- */
+        @media (max-width: 992px) {
+            /* No tablet/mobile, o grid vira uma coluna só */
+            .layout-grid {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+
+            /* Esconde as sidebars do fluxo normal */
+            .sidebar-left, .sidebar-right {
+                display: none; 
+            }
+
+            /* Mostra o botão hambúrguer */
+            .hamburger-btn { display: block; }
+
+            /* Transforma a sidebar esquerda em um menu "Drawer" off-canvas */
+            .sidebar-left.active {
+                display: block;
+                position: fixed;
+                top: 70px; /* Altura do header */
+                left: 0;
+                width: 280px;
+                height: calc(100vh - 70px);
+                z-index: 99;
+                border-right: 2px solid var(--cm-gold);
+                box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+                overflow-y: auto;
+                animation: slideInLeft 0.3s ease forwards;
+            }
+            
+            /* Ajustes de tamanho para mobile */
+            .game-image-container { height: 250px; }
+            .article-title-h1 { font-size: 1.5rem; }
+            .game-name-overlay { font-size: 1.8rem; }
+            
+            /* A sidebar direita pode ir para baixo do conteúdo principal se quiser */
+            .sidebar-right-mobile-view {
+                 display: block;
+                 margin-top: 30px;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo-container">
+            <img src="/images/logo-campmanager.png" alt="CampManager Logo" class="logo-img">
+            
+            <span class="logo-text">CampManager</span>
+        </div>
+        <i class="bi bi-list hamburger-btn" onclick="toggleMenu()"></i>
+    </header>
+
+    <div class="layout-grid">
+
+        <nav class="sidebar-left" id="sidebarMenu">
+            <div class="nav-menu-title">Navegação Principal</div>
+            <ul>
+                <li class="nav-item">
+                    <a href="/jogos" class="nav-link active" style="border-left: 3px solid var(--cm-gold); opacity: 1; color: var(--cm-gold-bright);">
+                        <i class="bi bi-house-door-fill"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/jogos/novo" class="nav-link">
+                        <i class="bi bi-controller"></i> Novo Jogo/Camp.
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-trophy-fill"></i> Meus Torneios
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-people-fill"></i> Minhas Equipes
+                    </a>
+                </li>
+                <div class="nav-menu-title mt-4">Conta</div>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-person-circle"></i> Perfil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-gear-fill"></i> Configurações
+                    </a>
+                </li>
+                 <li class="nav-item mt-5">
+                     <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="nav-link" style="background: none; border: none; width: 100%; cursor: pointer;">
+                             <i class="bi bi-box-arrow-left text-danger"></i> Sair
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="central-content">
+            <article class="featured-article">
+                <div class="article-header">
+                    <h1 class="article-title-h1">
+                        <i class="bi bi-stars"></i> Jogo do Mês: Destaque
+                    </h1>
+                </div>
+                
+                <div class="game-image-container">
+                    <img src="https://wallpapers.com/images/high/free-fire-max-pictures-6496-x-3654-c5x43k55522k50d8.webp" 
+                         alt="Destaque Free Fire" 
+                         class="game-feature-img">
+                    
+                    <div class="game-overlay-info">
+                        <div class="game-name-overlay">FREE FIRE</div>
+                    </div>
+                </div>
+
+                <div class="article-body">
+                    <div class="article-description">
+                        <p>
+                            O <span class="highlight-gold">Garena Free Fire</span> é o destaque absoluto deste mês no CampManager! 
+                            Conhecido por sua ação frenética e estratégia de sobrevivência, é o cenário perfeito para os competidores mais ávidos.
+                        </p>
+                        <br>
+                        <p>
+                            A <span class="highlight-gold">Liga CampManager FF</span> está em andamento. Equipes de todo o Brasil estão disputando o prêmio total e a glória de ser o campeão da temporada. O formato atual é Squad (4x4) no modo Battle Royale competitivo. Prepare suas estratégias de rotação, domine o "capa" e leve sua equipe ao Booyah!
+                        </p>
+                        <br>
+                        <p>Não fique de fora dessa. O cenário competitivo espera por você.</p>
+                    </div>
+                </div>
+            </article>
+
+            <section class="cta-section">
+                <div class="cta-card">
+                    <i class="bi bi-shield-plus cta-icon"></i>
+                    <h3 class="cta-title">Cadastre sua Equipe</h3>
+                    <p class="cta-text">Reúna seus melhores jogadores e registre sua line-up para competir.</p>
+                    <a href="#" class="btn-cta-gold">Registrar Squad</a>
+                </div>
+                <div class="cta-card">
+                    <i class="bi bi-trophy cta-icon"></i>
+                    <h3 class="cta-title">Participar de Camp.</h3>
+                    <p class="cta-text">Veja os torneios com inscrições abertas e entre na disputa agora.</p>
+                    <a href="#" class="btn-cta-outline">Ver Torneios</a>
+                </div>
+                <div class="cta-card">
+                    <i class="bi bi-person-plus-fill cta-icon"></i>
+                    <h3 class="cta-title">Crie sua Conta</h3>
+                    <p class="cta-text">Ainda não é membro? Crie seu perfil de jogador e comece sua jornada.</p>
+                    <a href="#" class="btn-cta-outline">Criar Perfil</a>
+                </div>
+            </section>
+
+            <aside class="sidebar-right sidebar-right-mobile-view d-lg-none">
+                 <h3 class="aside-title"><i class="bi bi-lightning-fill me-2"></i>Rápido</h3>
+                 <a href="#" class="quick-link-item">Regras da Temporada FF</a>
+                 <a href="#" class="quick-link-item">Ranking Geral de Equipes</a>
+                 <a href="#" class="quick-link-item">Calendário de Jogos</a>
+            </aside>
+        </main>
+
+        <aside class="sidebar-right d-none d-lg-block">
+            <div class="mb-4">
+                 <h3 class="aside-title"><i class="bi bi-lightning-fill me-2"></i>Acesso Rápido</h3>
+                 <a href="#" class="quick-link-item">Regras da Temporada FF</a>
+                 <a href="#" class="quick-link-item">Ranking Geral de Equipes</a>
+                 <a href="#" class="quick-link-item">Calendário de Jogos</a>
+                 <a href="#" class="quick-link-item">Reportar um Problema</a>
+            </div>
+            
+             <div class="mb-4">
+                 <h3 class="aside-title"><i class="bi bi-newspaper me-2"></i>Notícias</h3>
+                 <p class="text-muted fs-6 mb-2">Nova atualização de balanceamento de armas chega na próxima semana.</p>
+                 <a href="#" class="text-gold fs-6" style="text-decoration: underline;">Ler mais</a>
+            </div>
+        </aside>
+
+    </div> <footer class="main-footer">
+        <div class="footer-links">
+            <a href="#" class="footer-link">Fale Conosco</a>
+            <a href="#" class="footer-link">Entenda sobre nosso aplicativo</a>
+            <a href="#" class="footer-link">Programe conosco (Carreiras)</a>
+            <a href="#" class="footer-link">Termos de Uso</a>
+            <a href="#" class="footer-link">Privacidade</a>
+        </div>
+        <div class="footer-copy">
+            &copy; 2023 CampManager. Todos os direitos reservados para os Gamers.
+        </div>
+    </footer>
+
+    <a href="https://api.whatsapp.com/send?phone=SEU_NUMERO_AQUI&text=Olá! Vim pelo app CampManager." 
+       class="whatsapp-float" 
+       target="_blank"
+       title="Fale conosco no WhatsApp">
+        <i class="bi bi-whatsapp"></i>
+    </a>
+
+    <script>
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebarMenu');
+            sidebar.classList.toggle('active');
+        }
+    </script>
+
+</body>
+</html>

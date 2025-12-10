@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>CampManager | Cadastro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- ESTILOS CSS IDÊNTICOS AOS DE LOGIN PARA CONSISTÊNCIA --- */
+        :root {
+            --cm-bg-main: #000913; 
+            --cm-bg-secondary: #051425;
+            --cm-bg-tertiary: #081b33;
+            --cm-gold: #d4af37; /* Cor principal de destaque */
+            --cm-gold-bright: #cfaa47; 
+            --cm-text-light: #e6e6e6;
+            --font-gamer: 'Rajdhani', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--cm-bg-main);
+            color: var(--cm-text-light);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(circle at center, #0a1f3f 0%, var(--cm-bg-main) 70%); 
+        }
+
+        .login-card {
+            background-color: var(--cm-bg-secondary);
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+
+        .logo-img { height: 80px; margin-bottom: 1rem; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); }
+        
+        h2 {
+            font-family: var(--font-gamer);
+            color: var(--cm-gold);
+            text-transform: uppercase;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .input-group { margin-bottom: 1.5rem; text-align: left; }
+        label { 
+            font-weight: 600; 
+            margin-bottom: 0.5rem; 
+            display: block; 
+            color: var(--cm-gold); 
+            font-family: var(--font-gamer); 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--cm-bg-tertiary);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 6px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--cm-gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--cm-gold);
+            color: var(--cm-bg-main);
+            font-family: var(--font-gamer);
+            font-weight: 800;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 1rem;
+        }
+        .btn-login:hover { 
+            background-color: var(--cm-gold-bright); 
+            color: white; 
+            transform: scale(1.02); 
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .links { margin-top: 1.5rem; font-size: 0.9rem; }
+        .links a { color: var(--cm-text-light); text-decoration: none; margin: 0 10px; transition: 0.3s; }
+        .links a:hover { color: var(--cm-gold); text-decoration: underline; }
+        
+        #message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: left;
+            display: none; 
+        }
+        .success {
+            background-color: #0d3b14;
+            border: 1px solid #145a20;
+            color: #7ef585;
+        }
+        .error {
+            background-color: #4b1a1a;
+            border: 1px solid #722d2d;
+            color: #ff6e6e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <img src="images/logo-campmanager.png" alt="Logo" class="logo-img">
+        <h2>Crie sua Conta</h2>
+
+        <form id="registerForm" action="/api/v1/auth/register" method="POST">
+            
+            <div class="input-group">
+                <label for="regEmail">Email</label>
+                <input type="email" id="regEmail" placeholder="Seu email principal" required>
+            </div>
+
+            <div class="input-group">
+                <label for="nickname">Nickname</label>
+                <input type="text" id="nickname" placeholder="Nickname no jogo" required>
+            </div>
+
+            <div class="input-group">
+                <label for="regPassword">Senha</label>
+                <input type="password" id="regPassword" placeholder="Crie sua senha (mín. 6 dígitos)" required>
+            </div>
+
+            <div class="input-group">
+                <label for="confirmPassword">Confirme a Senha</label>
+                <input type="password" id="confirmPassword" placeholder="Repita a senha" required>
+            </div>
+            
+            <div id="message" style="display: none;"></div>
+
+            <button type="submit" id="registerBtn" class="btn-login">
+                <i class="fas fa-user-plus"></i> Registrar
+            </button> 
+
+            <div class="links">
+                <a href="/login" style="color: var(--cm-gold); font-weight: bold;">Já tenho Conta</a> | <a href="#">Termos de Uso</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const registerForm = document.getElementById('registerForm');
+            const emailInput = document.getElementById('regEmail'); 
+            const nicknameInput = document.getElementById('nickname');
+            const passwordInput = document.getElementById('regPassword');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const registerBtn = document.getElementById('registerBtn');
+            const messageBox = document.getElementById('message');
+            
+            // Endpoint de Cadastro no Spring Boot (conforme AuthController)
+            const API_REGISTER_URL = 'http://localhost:8080/api/v1/auth/register';
+
+            const displayMessage = (text, type) => {
+                messageBox.textContent = text;
+                messageBox.className = ''; 
+                messageBox.classList.add(type);
+                messageBox.style.display = 'block';
+            };
+
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); 
+                messageBox.style.display = 'none';
+
+                const email = emailInput.value.trim();
+                const nickname = nicknameInput.value.trim();
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                if (!email || !nickname || !password || !confirmPassword) {
+                    displayMessage("Por favor, preencha todos os campos.", "error");
+                    return;
+                }
+                
+                // Validação de Senhas
+                if (password !== confirmPassword) {
+                    displayMessage("As senhas não coincidem.", "error");
+                    confirmPasswordInput.value = '';
+                    passwordInput.value = '';
+                    return;
+                }
+
+                // Inicia o estado de carregamento
+                const originalText = registerBtn.innerHTML;
+                registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
+                registerBtn.disabled = true;
+                registerBtn.style.opacity = 0.7;
+
+                // O payload deve corresponder ao RegisterRequest.java no Spring Boot
+                const payload = {
+                    email: email, 
+                    nickname: nickname,
+                    password: password
+                };
+
+                try {
+                    const response = await fetch(API_REGISTER_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.status === 201) {
+                        // Código 201 CREATED retornado pelo Spring Boot
+                        displayMessage('Cadastro realizado com sucesso! Você será redirecionado para o Login.', 'success');
+                        
+                        registerForm.reset(); 
+                        
+                        setTimeout(() => {
+                             // Redireciona para o login após o sucesso
+                             window.location.href = '/login'; 
+                         }, 2500);
+                        
+                    } else if (response.status === 409) {
+                        // Código 409 CONFLICT (erro de email/nickname duplicado, conforme o AuthService)
+                        const errorText = await response.text();
+                        displayMessage(`Falha ao registrar: ${errorText || 'Email ou Nickname já em uso.'}`, 'error');
+                        
+                    } else {
+                        // Outros erros
+                        displayMessage('Erro desconhecido no servidor ao registrar. Tente novamente.', 'error');
+                    }
+
+                } catch (error) {
+                    console.error('Erro de conexão:', error);
+                    displayMessage('Erro de rede. Verifique se o Spring Boot está rodando.', 'error');
+                
+                } finally {
+                    // Restaura o botão
+                    registerBtn.innerHTML = originalText;
+                    registerBtn.disabled = false;
+                    registerBtn.style.opacity = 1;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

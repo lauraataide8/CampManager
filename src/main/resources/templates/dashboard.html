@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>CampManager | Dashboard Gamer</title>
+    <link rel="icon" type="image/png" href="images/campmanager-favicon.png"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CSS BASE E VARIAVEIS (Mantenha a consistência) --- */
+        :root {
+            --cm-bg-main: #000913; 
+            --cm-bg-secondary: #051425;
+            --cm-bg-tertiary: #081b33;
+            --cm-gold: #d4af37; 
+            --cm-gold-bright: #cfaa47; 
+            --cm-text-light: #e6e6e6;
+            --font-gamer: 'Rajdhani', sans-serif;
+            --sidebar-width: 250px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--cm-bg-main);
+            color: var(--cm-text-light);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            display: flex; /* Habilita layout flexível (Sidebar e Conteúdo) */
+            min-height: 100vh;
+        }
+        
+        /* --- SIDEBAR DE NAVEGAÇÃO --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--cm-bg-secondary);
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Para colocar o rodapé/sair embaixo */
+            border-right: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo-img {
+            max-height: 50px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            flex-grow: 1; /* Permite que o menu ocupe o espaço central */
+        }
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 15px;
+            color: var(--cm-text-light);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: 0.3s;
+            font-family: var(--font-gamer);
+            text-transform: uppercase;
+        }
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: var(--cm-bg-tertiary);
+            color: var(--cm-gold);
+        }
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--cm-gold);
+        }
+
+        /* --- CONTEÚDO PRINCIPAL --- */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .welcome-header {
+            font-family: var(--font-gamer);
+            color: var(--cm-gold-bright);
+            font-size: 3rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 10px;
+        }
+
+        /* --- MODAL FALE CONOSCO --- */
+        .modal {
+            display: none; /* Escondido por padrão */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--cm-bg-secondary);
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--cm-gold);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.9);
+        }
+
+        .close-btn {
+            color: var(--cm-text-light);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .close-btn:hover, .close-btn:focus {
+            color: var(--cm-gold);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .modal-content h3 {
+            font-family: var(--font-gamer);
+            color: var(--cm-gold);
+            margin-bottom: 20px;
+        }
+        
+        /* Reutiliza os estilos de input de login */
+        .modal-content input, .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: var(--cm-bg-tertiary);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 4px;
+            color: white;
+            resize: vertical;
+        }
+        .modal-content button {
+            background-color: var(--cm-gold);
+            color: var(--cm-bg-main);
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .modal-content button:hover {
+            background-color: var(--cm-gold-bright);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div>
+            <div class="logo-container">
+                <img src="images/logo-campmanager.png" alt="CampManager Logo" class="logo-img">
+            </div>
+
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" onclick="loadContent('home')"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="#" onclick="loadContent('teams')"><i class="fas fa-users"></i> Minhas Equipes</a></li>
+                <li><a href="#" onclick="loadContent('account')"><i class="fas fa-gear"></i> Minha Conta</a></li> 
+                
+                <li><a href="#" id="faleConoscoBtn"><i class="fas fa-headset"></i> Fale Conosco</a></li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="#" onclick="logout()" style="color: #ff6e6e; font-weight: bold;"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <h1 class="welcome-header">Bem-vindo, Jogador!</h1>
+        <div id="content-area">
+            <p>Use o menu lateral para gerenciar suas equipes e informações de perfil.</p>
+        </div>
+    </main>
+    
+    <div id="faleConoscoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3>Entre em Contato</h3>
+            <form id="contatoForm">
+                <input type="text" id="contatoNome" placeholder="Seu Nome Completo" required>
+                <input type="email" id="contatoEmail" placeholder="Seu Email" required>
+                <input type="tel" id="contatoTelefone" placeholder="Seu Telefone (Opcional)">
+                <textarea id="contatoMensagem" placeholder="Sua Mensagem" rows="5" required></textarea>
+                <button type="submit">Enviar Mensagem</button>
+                <div id="contatoMessage" style="margin-top: 10px;"></div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- VARIÁVEIS DO MODAL ---
+            const modal = document.getElementById("faleConoscoModal");
+            const btn = document.getElementById("faleConoscoBtn");
+            const span = document.getElementsByClassName("close-btn")[0];
+            const contatoForm = document.getElementById("contatoForm");
+            const contatoMessage = document.getElementById("contatoMessage");
+            
+            // --- FUNÇÃO DE LOGOUT ---
+            window.logout = function() {
+                localStorage.removeItem('campmanager_token');
+                window.location.href = '/login'; 
+            }
+            
+            // --- FUNÇÃO DE CARREGAMENTO DE CONTEÚDO (SPA Básico) ---
+            window.loadContent = function(section) {
+                const contentArea = document.getElementById('content-area');
+                const menuItems = document.querySelectorAll('.sidebar-menu a');
+                
+                // Remove a classe 'active' de todos os itens
+                menuItems.forEach(item => item.classList.remove('active'));
+                
+                // Adiciona a classe 'active' ao item clicado (exceto Fale Conosco)
+                if(section !== 'contact') {
+                    event.target.classList.add('active'); 
+                }
+
+                // Simulação de carregamento de conteúdo
+                if (section === 'home') {
+                    contentArea.innerHTML = '<h2>Início</h2><p>Visão geral de seus eventos e estatísticas recentes.</p>';
+                } else if (section === 'teams') {
+                    contentArea.innerHTML = '<h2>Minhas Equipes</h2><p>Gerencie suas equipes, convites e campeonatos.</p>';
+                } else if (section === 'account') {
+                    contentArea.innerHTML = '<h2>Minha Conta</h2><p>Atualize seu email, senha e nickname.</p>';
+                }
+            };
+            
+            // --- LÓGICA DO MODAL (Abertura e Fechamento) ---
+            btn.onclick = function() {
+                modal.style.display = "flex"; // Exibe o modal
+            }
+
+            span.onclick = function() {
+                modal.style.display = "none";
+                contatoMessage.innerHTML = ''; // Limpa a mensagem
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                    contatoMessage.innerHTML = ''; // Limpa a mensagem
+                }
+            }
+
+            // --- LÓGICA DE ENVIO DO FORMULÁRIO DO MODAL ---
+            contatoForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                contatoMessage.innerHTML = 'Enviando...';
+                
+                const payload = {
+                    nome: document.getElementById('contatoNome').value,
+                    email: document.getElementById('contatoEmail').value,
+                    telefone: document.getElementById('contatoTelefone').value,
+                    mensagem: document.getElementById('contatoMensagem').value
+                };
+
+                try {
+                    // Endpoint de Contato que criaremos no Spring Boot (PASSOS FUTUROS)
+                    const API_CONTACT_URL = 'http://localhost:8080/api/v1/contato'; 
+                    
+                    const response = await fetch(API_CONTACT_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.status === 201 || response.ok) {
+                        contatoMessage.innerHTML = '<span style="color: #7ef585;">Mensagem enviada com sucesso!</span>';
+                        contatoForm.reset();
+                        setTimeout(() => modal.style.display = "none", 2000);
+                    } else {
+                        contatoMessage.innerHTML = '<span style="color: #ff6e6e;">Erro ao enviar. Tente novamente.</span>';
+                    }
+                } catch (error) {
+                    contatoMessage.innerHTML = '<span style="color: #ff6e6e;">Erro de conexão.</span>';
+                }
+            });
+            
+            // --- VERIFICAÇÃO INICIAL DO TOKEN (SEGURANÇA FRONTAL) ---
+            const token = localStorage.getItem('campmanager_token');
+            if (!token) {
+                // Se não houver token, redireciona para o login
+                window.location.href = '/login'; 
+            } else {
+                // Você pode adicionar aqui uma chamada para uma rota protegida para validar o token
+                // no servidor ao carregar a página.
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,13 @@
 package br.com.campmanager.projeto.entity;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import br.com.campmanager.projeto.enums.TipoUsuario;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,13 +16,21 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data
+@Data // Gera Getters, Setters, toString, hashCode, equals
+@NoArgsConstructor // Construtor sem argumentos (necessário para JPA)
+@AllArgsConstructor // Construtor com todos os argumentos
 @Entity
 @Table(name = "usuarios")
-public class Usuario {
+public class Usuario implements UserDetails {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,19 +47,48 @@ public class Usuario {
     @Column(unique = true, nullable = false)
     private String email;
 
+    // Coluna para a senha criptografada
     private String senhaHash;
 
     private String discordId;
     private String googleId;
 
-    @Enumerated(EnumType.STRING)
+    
+
+	@Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
 
     @Column(updatable = false)
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
+    // -----------------------------------------------------------------
+    // NOVO CAMPO: RELACIONAMENTO COM A EQUIPE
+    // Um Usuário pertence a UMA Equipe (ManyToOne)
+    @ManyToOne
+    @JoinColumn(name = "equipe_id") // Chave estrangeira na tabela 'usuarios'
+    private Equipe equipe;
+    // -----------------------------------------------------------------
+
+    // Métodos da interface UserDetails (Obrigatório para Spring Security)
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Mapeia o Enum TipoUsuario para a permissão do Spring Security
+        // Se for ADMIN, dá a permissão ADMIN. Caso contrário, MEMBER (ou PLAYER, etc.)
+        if (this.tipoUsuario == TipoUsuario.ADMIN) {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        } else {
+            return List.of(new SimpleGrantedAuthority("ROLE_MEMBER"));
+        }
+    }
+
+    public Usuario() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Usuario(Long idUsuario, String nickname, String gameIdExterno, String nomeCompleto, String email,
-			String senhaHash, String discordId, String googleId, TipoUsuario tipoUsuario, LocalDateTime dataCriacao) {
+			String senhaHash, String discordId, String googleId, TipoUsuario tipoUsuario, LocalDateTime dataCriacao,
+			Equipe equipe) {
+		super();
 		this.idUsuario = idUsuario;
 		this.nickname = nickname;
 		this.gameIdExterno = gameIdExterno;
@@ -55,9 +99,41 @@ public class Usuario {
 		this.googleId = googleId;
 		this.tipoUsuario = tipoUsuario;
 		this.dataCriacao = dataCriacao;
+		this.equipe = equipe;
 	}
 
-	public Long getIdUsuario() {
+	@Override
+    public String getPassword() {
+        return this.senhaHash;
+    }
+
+    @Override
+    public String getUsername() {
+        // Usamos o email como nome de usuário para o login
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+    
+    public Long getIdUsuario() {
 		return idUsuario;
 	}
 
@@ -136,9 +212,17 @@ public class Usuario {
 	public void setDataCriacao(LocalDateTime dataCriacao) {
 		this.dataCriacao = dataCriacao;
 	}
-	
-	
-    
-    
-	
+
+	public Equipe getEquipe() {
+		return equipe;
+	}
+
+	public void setEquipe(Equipe equipe) {
+		this.equipe = equipe;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 }

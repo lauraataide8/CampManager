@@ -2,14 +2,23 @@ package br.com.campmanager.projeto.entity;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
-import java.time.LocalDate;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
+import br.com.campmanager.projeto.enums.FormatoCampeonato;
 import br.com.campmanager.projeto.enums.StatusCampeonato;
 
-@Data
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "campeonatos")
 public class Campeonato {
 
@@ -17,38 +26,57 @@ public class Campeonato {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCampeonato;
 
-    private String titulo;
-    private String regras;
-    private LocalDate dataInicio;
+    @Column(nullable = false, length = 100, unique = true)
+    private String nome;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StatusCampeonato status;
 
-    @ManyToOne
-    @JoinColumn(name = "id_organizador")
-    private Usuario organizador;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FormatoCampeonato formato;
 
-    @ManyToOne
-    @JoinColumn(name = "id_jogo")
-    private Jogo jogo;
-    
+    @Column(nullable = false)
+    private LocalDate dataInicio;
+
+    @Column
+    private LocalDate dataFim;
+
+    @Column(nullable = false)
+    private Integer maxEquipes;
+
+    // Campo para armazenar o chaveamento em formato JSON (ex: estrutura da chave de eliminação)
+    @Lob 
+    private String chaveamentoJson;
+
+    // Relacionamento: Quem criou o campeonato
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_criador_id", nullable = false)
+    private Usuario criador;
+
+    // Relacionamento: Equipes participantes (Tabela de junção: campeonato_equipe)
     @ManyToMany
     @JoinTable(
-      name = "inscricoes", 
-      joinColumns = @JoinColumn(name = "id_campeonato"), 
-      inverseJoinColumns = @JoinColumn(name = "id_equipe"))
-    private List<Equipe> equipesInscritas;
+        name = "campeonato_equipe",
+        joinColumns = @JoinColumn(name = "campeonato_id"),
+        inverseJoinColumns = @JoinColumn(name = "equipe_id")
+    )
+    private Set<Equipe> equipesParticipantes = new HashSet<>();
 
-	public Campeonato(Long idCampeonato, String titulo, String regras, LocalDate dataInicio, StatusCampeonato status,
-			Usuario organizador, Jogo jogo, List<Equipe> equipesInscritas) {
+	public Campeonato(Long idCampeonato, String nome, StatusCampeonato status, FormatoCampeonato formato,
+			LocalDate dataInicio, LocalDate dataFim, Integer maxEquipes, String chaveamentoJson, Usuario criador,
+			Set<Equipe> equipesParticipantes) {
 		this.idCampeonato = idCampeonato;
-		this.titulo = titulo;
-		this.regras = regras;
-		this.dataInicio = dataInicio;
+		this.nome = nome;
 		this.status = status;
-		this.organizador = organizador;
-		this.jogo = jogo;
-		this.equipesInscritas = equipesInscritas;
+		this.formato = formato;
+		this.dataInicio = dataInicio;
+		this.dataFim = dataFim;
+		this.maxEquipes = maxEquipes;
+		this.chaveamentoJson = chaveamentoJson;
+		this.criador = criador;
+		this.equipesParticipantes = equipesParticipantes;
 	}
 
 	public Long getIdCampeonato() {
@@ -59,28 +87,12 @@ public class Campeonato {
 		this.idCampeonato = idCampeonato;
 	}
 
-	public String getTitulo() {
-		return titulo;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-
-	public String getRegras() {
-		return regras;
-	}
-
-	public void setRegras(String regras) {
-		this.regras = regras;
-	}
-
-	public LocalDate getDataInicio() {
-		return dataInicio;
-	}
-
-	public void setDataInicio(LocalDate dataInicio) {
-		this.dataInicio = dataInicio;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public StatusCampeonato getStatus() {
@@ -91,29 +103,64 @@ public class Campeonato {
 		this.status = status;
 	}
 
-	public Usuario getOrganizador() {
-		return organizador;
+	public FormatoCampeonato getFormato() {
+		return formato;
 	}
 
-	public void setOrganizador(Usuario organizador) {
-		this.organizador = organizador;
+	public void setFormato(FormatoCampeonato formato) {
+		this.formato = formato;
 	}
 
-	public Jogo getJogo() {
-		return jogo;
+	public LocalDate getDataInicio() {
+		return dataInicio;
 	}
 
-	public void setJogo(Jogo jogo) {
-		this.jogo = jogo;
+	public void setDataInicio(LocalDate dataInicio) {
+		this.dataInicio = dataInicio;
 	}
 
-	public List<Equipe> getEquipesInscritas() {
-		return equipesInscritas;
+	public LocalDate getDataFim() {
+		return dataFim;
 	}
 
-	public void setEquipesInscritas(List<Equipe> equipesInscritas) {
-		this.equipesInscritas = equipesInscritas;
+	public void setDataFim(LocalDate dataFim) {
+		this.dataFim = dataFim;
 	}
+
+	public Integer getMaxEquipes() {
+		return maxEquipes;
+	}
+
+	public void setMaxEquipes(Integer maxEquipes) {
+		this.maxEquipes = maxEquipes;
+	}
+
+	public String getChaveamentoJson() {
+		return chaveamentoJson;
+	}
+
+	public void setChaveamentoJson(String chaveamentoJson) {
+		this.chaveamentoJson = chaveamentoJson;
+	}
+
+	public Usuario getCriador() {
+		return criador;
+	}
+
+	public void setCriador(Usuario criador) {
+		this.criador = criador;
+	}
+
+	public Set<Equipe> getEquipesParticipantes() {
+		return equipesParticipantes;
+	}
+
+	public void setEquipesParticipantes(Set<Equipe> equipesParticipantes) {
+		this.equipesParticipantes = equipesParticipantes;
+	}
+	
+	
     
     
 }
+

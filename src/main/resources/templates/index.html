@@ -1,351 +1,501 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Painel Gamer - CampManager</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="icon" href="/image/favicon.png" type="image/png" />
+
     <style>
-        /* --- RESET E ESTILOS GERAIS --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+     * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      body {
+        background-color: #000913;
+        color: #ffffff;
+        /* MUDANÇA: min-height em vez de height fixo para evitar bugs de scroll */
+        min-height: 150vh;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* CABEÇALHO */
+      .main-header {
+        height: 240px; 
+        position: relative;
+        color: #fff;
+        margin-bottom: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        transition: height 0.8s ease;
+      }
+
+      .main-header::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        /* ajustar caminho no git */
+        background-image: url('static/image/logo-campmanager-banner.png');
+        background-size: cover; 
+        background-position: center;
+        background-repeat: no-repeat;
+        filter: brightness(0.5); 
+        z-index: 1;
+        mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+      }
+
+      .logo-container {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: left;
+        align-items: flex-end; /* MUDANÇA: Logo alinha embaixo para ficar mais moderno */
+        padding-left: 25px;
+        padding-bottom: 20px;
+      }
+
+      .logo-image {
+        /* MUDANÇA: Tamanho dinâmico */
+        height: 180px;
+        width: auto;
+        filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+        transition: transform 0.3s;
+      }
+
+      .logo-image:hover {
+        transform: scale(2.00); /* Reduzi um pouco o zoom para não estourar */
+      }
+
+      /* --- LAYOUT PRINCIPAL (GRID) --- */
+      .app-container {
+        display: grid;
+        grid-template-columns: 290px 1fr 320px; 
+        gap: 30px;
+        max-width: 1980px; /* Limite para telas ultra-wide */
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 20px 20px 20px;
+        flex-grow: 1;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* --- SIDEBAR ESQUERDA --- */
+      .sidebar-left {
+        background-color: #051425;
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        height: fit-content;
+        position: sticky; /* Faz o menu acompanhar o scroll no PC */
+        top: 20px;
+      }
+
+      .menu-section-title {
+        font-size: 0.75rem;
+        color: #8b9bb4;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 15px;
+        margin-top: 20px;
+        font-weight: bold;
+      }
+
+      .menu-section-title:first-child {
+        margin-top: 0;
+      }
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        color: #b0c0d6;
+        text-decoration: none;
+        border-radius: 8px;
+        margin-bottom: 5px;
+        transition: all 0.3s;
+        font-weight: 500;
+        white-space: nowrap; 
+      }
+
+      .menu-item:hover,
+      .menu-item.active {
+        background: linear-gradient(90deg, #0f2e52 0%, #051425 100%);
+        color: #d4af37;
+        border-left: 3px solid #d4af37;
+      }
+
+      .menu-item i {
+        margin-right: 12px;
+        width: 20px;
+        text-align: center;
+      }
+
+      /* --- CONTEÚDO PRINCIPAL --- */
+      .main-content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        min-width: 0; /* Impede que imagens estourem o grid */
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 5px;
+      }
+
+      .section-header h2 {
+        color: #cfaa47;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+
+      /* CARDS */
+      .highlight-card {
+        background: linear-gradient(to bottom, #081b33, #040e1a);
+        border: 1px solid #1c3a5e;
+        border-radius: 12px;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .highlight-image-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle at center,
+          rgba(11, 47, 92, 0.2),
+          #040e1a
+        );
+        z-index: 0;
+      }
+
+      .highlight-content {
+        position: relative;
+        z-index: 1;
+        padding: 30px;
+        background: linear-gradient(to top, #040e1a 10%, transparent);
+      }
+
+      .highlight-content h1 {
+        font-size: clamp(1.5rem, 4vw, 2rem); /* Fonte responsiva */
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        color: #fff;
+      }
+
+      .card-inline-image {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #1c3a5e;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .highlight-content p {
+        color: #c0d1e6;
+        line-height: 1.6;
+        font-size: 1rem;
+      }
+      .highlight-link {
+        color: #d4af37;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      /* --- FOOTER --- */
+      .main-footer {
+        background-color: #051425;
+        border-top: 2px solid #d4af37;
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+      }
+
+      .footer-logo {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #d4af37;
+      }
+      .footer-links a {
+        color: #8b9bb4;
+        text-decoration: none;
+        margin-left: 20px;
+        font-size: 0.9rem;
+        transition: color 0.2s;
+      }
+      .footer-links a:hover {
+        color: #fff;
+      }
+
+      /* --- SIDEBAR DIREITA --- */
+      .sidebar-right {
+        background-color: #051425;
+        border-radius: 12px;
+        padding: 20px;
+        height: fit-content;
+      }
+
+      .right-menu-title {
+        color: #cfaa47;
+        font-size: 1rem;
+        text-transform: uppercase;
+        border-bottom: 1px solid #1c3a5e;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        font-weight: bold;
+      }
+
+      .right-menu-list {
+        list-style: none;
+        margin-bottom: 30px;
+      }
+      .right-menu-list li {
+        margin-bottom: 12px;
+      }
+      .right-menu-list a {
+        color: #b0c0d6;
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: color 0.2s;
+      }
+      .right-menu-list a:hover {
+        color: #ffffff;
+        text-decoration: underline;
+      }
+      .patch-notes-box {
+        background-color: #081b33;
+        padding: 10px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #fff;
+      }
+
+      /*RESPONSIVIDADE E BREAKPOINTS */
+
+      /* NOTEBOOKS E TABLETS EM PAISAGEM (1024px até 1366px) */
+      @media (max-width: 1400px) {
+        .main-header {
+           height: 280px; /* Reduz altura para caber na tela do notebook */
         }
-        body {
-            background-color: #000913; /* Fundo bem escuro (Deep Navy) */
-            color: #ffffff;
-            height: 100vh;
-            overflow-x: hidden;
+        .logo-image {
+           height: 130px; /* Reduz logo proporcionalmente */
         }
-        /* --- CABEÇALHO GLOBAL (BANNER COMPLETO) --- */
-        .global-header-banner {
-            width: 100%;
-            height: 150px; /* Altura do banner do cabeçalho */
-            background-image: url('images/header-bg.png'); /* Imagem de fundo do cabeçalho */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
-        }
-        .global-header-banner::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top, rgba(4, 14, 26, 0.7), rgba(11, 47, 92, 0.4));
-            z-index: 1;
-        }
-        .global-header-banner-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-        }
-        .global-header-banner-content h1 {
-            font-size: 2.8rem;
-            color: #d4af37;
-            text-transform: uppercase;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
-        }
-        /* --- LAYOUT PRINCIPAL (GRID) --- */
         .app-container {
-            display: grid;
-            grid-template-columns: 260px 1fr 280px; /* Menu Esq | Conteúdo | Menu Dir */
-            gap: 30px;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 0 20px 20px 20px; /* Ajuste no padding para o banner do cabeçalho */
-            height: calc(100% - 170px); /* Ajusta altura para considerar o cabeçalho */
+           /* Espreme um pouco as laterais para priorizar o conteúdo */
+           grid-template-columns: 200px 1fr 220px; 
+           gap: 20px;
         }
-        /* --- 1. MENU LATERAL ESQUERDO --- */
+      }
+
+      /* TABLETS E TELAS MÉDIAS (até 992px) */
+      @media (max-width: 992px) {
+        .app-container {
+           /* Remove a sidebar direita */
+           grid-template-columns: 200px 1fr; 
+        }
+        .sidebar-right {
+           display: none;
+        }
+      }
+
+      /* CELULARES E TABLETS PEQUENOS (até 768px) */
+      @media (max-width: 768px) {
+        .main-header {
+           height: 180px; /* Header bem compacto no celular */
+        }
+        
+        .logo-container {
+            justify-content: center; /* Centraliza logo */
+            align-items: center;
+            padding-bottom: 0;
+            padding-left: 0;
+        }
+
+        .logo-image {
+           height: 90px;
+        }
+
+        .app-container {
+           grid-template-columns: 1fr; /* Uma coluna só */
+           padding: 10px;
+           gap: 15px;
+        }
+
+        /* --- SOLUÇÃO PARA O MENU NO CELULAR --- */
+        /* Transforma o menu lateral em uma barra horizontal scrollável */
         .sidebar-left {
-            background-color: #051425;
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+           display: flex;
+           flex-direction: row; /* Itens lado a lado */
+           overflow-x: auto; /* Permite rolar para o lado */
+           padding: 10px;
+           width: 100%;
+           border-radius: 8px;
+           margin-bottom: 10px;
+           position: static; /* Remove o sticky */
+           white-space: nowrap;
         }
         .menu-section-title {
-            font-size: 0.75rem;
-            color: #8b9bb4;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            margin-top: 20px;
-            font-weight: bold;
+           display: none; /* Esconde títulos para economizar espaço */
         }
-        .menu-section-title:first-child {
-            margin-top: 0;
-        }
+
         .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            color: #b0c0d6;
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 5px;
-            transition: all 0.3s;
-            font-weight: 500;
+           margin-right: 10px;
+           margin-bottom: 0;
+           font-size: 0.9rem;
+           background-color: #081b33;
         }
-        .menu-item:hover, .menu-item.active {
-            background: linear-gradient(90deg, #0f2e52 0%, #051425 100%);
-            color: #d4af37; /* Dourado */
-            border-left: 3px solid #d4af37;
-        }
-        .menu-item i {
-            margin-right: 12px;
-            width: 20px;
-            text-align: center;
-        }
-        /* --- 2. CONTEÚDO PRINCIPAL (CENTRO) --- */
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 5px;
-        }
-        .section-header h2 {
-            color: #cfaa47; /* Dourado escuro */
-            font-size: 1.5rem;
-            text-transform: uppercase;
-            font-weight: 800;
-        }
-        /* CARD DESTAQUE (BANNER) */
-        .highlight-card {
-            background: linear-gradient(to bottom, #081b33, #040e1a);
-            border: 1px solid #1c3a5e;
-            border-radius: 12px;
-            padding: 0;
-            overflow: hidden;
-            position: relative;
-            min-height: 400px; /* Altura do banner */
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-        }
-        .highlight-image-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover; /* Ajustado para 'cover' */
-            background-position: center center;
-            background-repeat: no-repeat;
-            z-index: 0;
-        }
-        .highlight-content {
-            position: relative;
-            z-index: 1;
-            padding: 30px;
-            background: linear-gradient(to top, #040e1a 10%, transparent);
-        }
-        .highlight-content h1 {
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
-        .highlight-content p {
-            color: #c0d1e6;
-            max-width: 80%;
-            line-height: 1.5;
-        }
-        .highlight-link {
-            color: #d4af37;
-            font-weight: bold;
-            text-decoration: none;
-        }
-        /* --- FOOTER --- */
+        
+        /* Footer em coluna */
         .main-footer {
-            background-color: #051425;
-            border-top: 2px solid #d4af37; /* Linha dourada no topo */
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto; /* Empurra para o final se sobrar espaço */
-        }
-        .footer-logo {
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: #d4af37;
+           flex-direction: column;
+           gap: 15px;
+           text-align: center;
         }
         .footer-links a {
-            color: #8b9bb4;
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.9rem;
-            transition: color 0.2s;
+            margin: 0 10px;
         }
-        .footer-links a:hover {
-            color: #fff;
-        }
-        /* --- 3. BARRA LATERAL DIREITA --- */
-        .sidebar-right {
-            background-color: #051425;
-            border-radius: 12px;
-            padding: 20px;
-            height: fit-content; /* Ajusta altura ao conteúdo */
-        }
-        .right-menu-title {
-            color: #cfaa47;
-            font-size: 1rem;
-            text-transform: uppercase;
-            border-bottom: 1px solid #1c3a5e;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        .right-menu-list {
-            list-style: none;
-            margin-bottom: 30px;
-        }
-        .right-menu-list li {
-            margin-bottom: 12px;
-        }
-        .right-menu-list a {
-            color: #b0c0d6;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
-        .right-menu-list a:hover {
-            color: #ffffff;
-            text-decoration: underline;
-        }
-        .patch-notes-box {
-            background-color: #081b33;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            color: #fff;
-        }
-        /* --- RESPONSIVIDADE --- */
-        @media (max-width: 1024px) {
-            .app-container {
-                grid-template-columns: 200px 1fr; /* Esconde direita ou ajusta */
-            }
-            .sidebar-right {
-                display: none; /* Exemplo: oculta direita em telas menores */
-            }
-        }
-        @media (max-width: 768px) {
-            .app-container {
-                grid-template-columns: 1fr; /* Uma coluna em telas muito pequenas */
-                padding: 10px;
-            }
-            .sidebar-left {
-                display: none; /* Oculta o menu lateral esquerdo em telas muito pequenas */
-            }
-        }
+      }
     </style>
-</head>
-<body>
-    <header class="global-header-banner">
-        <div class="global-header-banner-content">
-            <h1>CampManager Dashboard</h1>
-        </div>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="main-header">
+      <nav
+        class="menu"
+        aria-label="Menu principal"
+        style="height: 100%; width: 100%"
+      >
+        <figure class="logo-container">
+          <a href="#">
+            <img
+              src="static/image/logo.png"
+              alt="Logo CampManager"
+              class="logo-image"
+            />
+          </a>
+        </figure>
+      </nav>
     </header>
 
     <div class="app-container">
-        <aside class="sidebar-left">
-            <div class="menu-section-title">Menu Principal</div>
-            <a href="#" class="menu-item active">
-                <i class="fas fa-home"></i> Home
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-gamepad"></i> Meus Jogos
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-trophy"></i> Torneios
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-users"></i> Guildas
-            </a>
-            <div class="menu-section-title">Usuário</div>
-            <a href="#" class="menu-item">
-                <i class="fas fa-user-circle"></i> Meu Perfil
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-cog"></i> Configurações
-            </a>
-        </aside>
+      <aside class="sidebar-left">
+        <div class="menu-section-title">Menu Principal</div>
+        <a href="#" class="menu-item active"
+          ><i class="fas fa-home"></i> Home</a
+        >
+        <a href="#" class="menu-item"><i class="fas fa-gamepad"></i> Jogos</a>
+        <a href="#" class="menu-item"><i class="fas fa-trophy"></i> Torneios</a>
+        <a href="#" class="menu-item"><i class="fas fa-users"></i> Guildas</a>
 
-        <main class="main-content">
-            <div class="section-header">
-                <i class="fas fa-fire" style="color: #cfaa47;"></i>
-                <h2>Destaques</h2>
-            </div>
-            <div class="highlight-card">
-                <div class="highlight-image-bg">
-                	<img src="../static/images/free.png" alt="imagem de fundo free fire">
-                </div>
-                <div class="highlight-content">
-                    <h1>Free Fire Temporada 2026</h1>
-                    <p>
-                        As inscrições para a <a href="#" class="highlight-link">Liga Oficial CampManager</a> estão abertas.
-                        Prepare sua guilda para o maior confronto do ano no mapa Bermuda.
-                    </p>
-                </div>
-            </div>
-            <div class="highlight-card">
-                <div class="highlight-image-bg">
-                </div>
-                <div class="highlight-content">
-                    <h1>Equipe Destaque</h1>
-                    <p>
-                        Dominando o servidor com estratégia impecável e precisão cirúrgica. A Kings vem redefinindo o meta e escalando o ranking global sem olhar para trás. Com uma taxa de vitórias impressionante, eles são os favoritos para levantar a taça do Free Fire 2026
-                    </p>
-                </div>
-            </div>
-            <footer class="main-footer">
-                <div class="footer-logo">
-                    <i class="fas fa-copyright"></i> 2026 CampManager
-                </div>
-                <div class="footer-links">
-                    <a href="#">Termos de Uso</a>
-                    <a href="#">Privacidade</a>
-                    <a href="#">Contato</a>
-                    <a href="#">Ajuda</a>
-                </div>
-            </footer>
-        </main>
+        <div class="menu-section-title">Gestão</div>
+        <a href="#" class="menu-item"
+          ><i class="fas fa-user-circle"></i> Meu Perfil</a
+        >
+        <a href="#" class="menu-item"
+          ><i class="fas fa-cog"></i> Minha Equipe</a
+        >
+        <a href="#" class="menu-item"
+          ><i class="fas fa-cog"></i> Sair</a
+        >
+      </aside>
 
-        <aside class="sidebar-right">
-            <div class="right-menu-title">Rápido</div>
-            <ul class="right-menu-list">
-                <li><a href="#">Ranking Global</a></li>
-                <li><a href="#">Regras da Comunidade</a></li>
-                <li><a href="#">Suporte Técnico</a></li>
-            </ul>
-            <div class="right-menu-title">Patch Notes</div>
-            <div class="patch-notes-box">
-                Nova arma disponível no CS Ranqueado.
-                <br><br>
-                <small style="color:#8b9bb4;">Atualizado hoje</small>
-            </div>
-        </aside>
+      <main class="main-content">
+        <div class="section-header">
+          <i class="fas fa-fire" style="color: #cfaa47"></i>
+          <h2>Destaques</h2>
+        </div>
+
+        <div class="highlight-card">
+          <div class="highlight-image-bg"></div>
+          <div class="highlight-content">
+            <h1>Free Fire Temporada 2026</h1>
+            <img
+              src="static/image/free.webp"
+              class="card-inline-image"
+              alt="Destaque Free Fire"
+            />
+            <p>
+              As inscrições para a
+              <a href="#" class="highlight-link">Liga Oficial CampManager</a>
+              estão abertas. Prepare sua guilda para o maior confronto do ano no
+              mapa Bermuda.
+            </p>
+          </div>
+        </div>
+
+        <div class="highlight-card">
+          <div class="highlight-image-bg"></div>
+          <div class="highlight-content">
+            <h1>Equipe Destaque</h1>
+            <img
+              src="static/image/squad.webp"
+              class="card-inline-image"
+              alt="Equipe Destaque"
+            />
+            <p>
+              Dominando o servidor com estratégia impecável. A
+              <strong>Kings</strong> vem redefinindo o meta e escalando o
+              ranking global.
+            </p>
+          </div>
+        </div>
+
+        <footer class="main-footer">
+          <div class="footer-logo">
+            <i class="fas fa-copyright"></i> 2026 CampManager
+          </div>
+          <div class="footer-links">
+            <a href="#">Termos</a><a href="#">Privacidade</a
+            ><a href="#">Contato</a>
+          </div>
+        </footer>
+      </main>
+
+      <aside class="sidebar-right">
+        <div class="right-menu-title">Rápido</div>
+        <ul class="right-menu-list">
+          <li><a href="#">Ranking Global</a></li>
+          <li><a href="#">Regras da Comunidade</a></li>
+          <li><a href="#">Suporte Técnico</a></li>
+        </ul>
+        <div class="right-menu-title">Patch Notes</div>
+        <div class="patch-notes-box">
+          Nova arma disponível no CS.<br /><br /><small style="color: #8b9bb4"
+            >Hoje</small
+          >
+        </div>
+      </aside>
     </div>
-</body>
+  </body>
 </html>

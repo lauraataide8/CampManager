@@ -6,6 +6,10 @@
     <title>CampManager | Home</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    
     <style>
         /* --- PALETA DE CORES & VARIÁVEIS --- */
         :root {
@@ -17,70 +21,85 @@
             --cm-text-light: #e6e6e6;   /* Texto claro */
             --cm-text-muted: #b0b0b0;   /* Texto secundário */
             --sidebar-width: 260px;     /* Largura da barra lateral desktop */
+            --font-gamer: 'Rajdhani', sans-serif; /* Nova variável de fonte */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: var(--cm-bg-main);
             color: var(--cm-text-light);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Fonte padrão para textos longos */
             display: grid;
-            grid-template-rows: auto 1fr auto; /* Header, Conteúdo, Footer */
+            grid-template-rows: auto 1fr auto;
             min-height: 100vh;
         }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
 
-        /* --- 1. HEADER CABEÇALHO --- */
+        /* --- 1. HEADER CABEÇALHO TIPO BANNER --- */
         .main-header {
             background-color: var(--cm-bg-secondary);
             border-bottom: 3px solid var(--cm-gold);
-            padding: 1rem 2rem;
+            /* Aumentei um pouco o padding para ficar mais imponente */
+            padding: 1.5rem 2rem; 
             display: flex;
-            justify-content: space-between;
+            justify-content: between;
             align-items: center;
             grid-row: 1 / 2;
             z-index: 100;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
         .logo-container {
             display: flex;
             align-items: center;
-        }
-        /* Configuração da Imagem da Logo */
-        .logo-img {
-            height: 50px; /* Altura fixa para manter o padrão */
-            width: auto;  /* Largura automática para não distorcer */
-            margin-right: 15px;
-            /* Opcional: se sua logo for muito escura, este filtro ajuda a destacar */
-            /* filter: drop-shadow(0 0 2px var(--cm-gold)); */
-        }
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--cm-gold);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .hamburger-btn {
-            display: none; /* Escondido no desktop */
-            font-size: 2rem;
-            color: var(--cm-gold);
+            /* ADICIONADO HOVER NO BANNER/LOGO */
+            transition: all 0.3s ease;
             cursor: pointer;
         }
+        .logo-container:hover {
+            /* Efeito de transparência e leve zoom ao passar o mouse */
+            opacity: 0.85;
+            transform: scale(1.02);
+        }
 
-        /* --- LAYOUT GRID PRINCIPAL (Desktop) --- */
+        /* Configuração da Imagem da Logo MAIOR */
+        .logo-img {
+            height: 80px; /* Aumentado de 50px para 80px para destaque */
+            width: auto;
+            margin-right: 20px;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+        }
+        /* Nova Tipografia da Logo */
+        .logo-text {
+            font-family: var(--font-gamer); /* Usando a fonte Rajdhani */
+            font-size: 2.5rem; /* Fonte bem maior */
+            font-weight: 700;
+            color: var(--cm-gold);
+            /* text-transform: uppercase;  <-- REMOVIDO O ALL CAPS */
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6); /* Sombra para destacar */
+        }
+        .hamburger-btn {
+            display: none;
+            font-size: 2.5rem; /* Ícone maior no mobile */
+            color: var(--cm-gold);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .hamburger-btn:hover { color: var(--cm-gold-bright); }
+
+        /* --- LAYOUT GRID PRINCIPAL --- */
         .layout-grid {
             display: grid;
-            /* Menu Esq | Conteúdo Central | Aside Dir */
             grid-template-columns: var(--sidebar-width) 1fr 280px;
-            gap: 20px;
-            padding: 20px;
-            max-width: 1400px;
+            gap: 30px; /* Aumentei o espaçamento geral */
+            padding: 30px;
+            max-width: 1440px;
             margin: 0 auto;
             width: 100%;
         }
 
-        /* --- 2. SIDEBAR ESQUERDA (Menu Vertical) --- */
+        /* --- 2. SIDEBAR ESQUERDA --- */
         .sidebar-left {
             background-color: var(--cm-bg-secondary);
             border-right: 1px solid rgba(132, 115, 77, 0.3);
@@ -88,144 +107,166 @@
             padding: 2rem 1rem;
             height: fit-content;
             position: sticky;
-            top: 20px;
+            top: 30px;
         }
         .nav-menu-title {
+            font-family: var(--font-gamer); /* Fonte gamer nos títulos */
             color: var(--cm-text-muted);
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             text-transform: uppercase;
             margin-bottom: 1rem;
             padding-left: 1rem;
+            letter-spacing: 1px;
         }
-        .nav-item { margin-bottom: 0.5rem; }
+        .nav-item { margin-bottom: 0.8rem; }
         .nav-link {
             display: flex;
             align-items: center;
             padding: 0.8rem 1rem;
             color: var(--cm-text-light);
             border-radius: 6px;
-            /* ANIMAÇÃO DE ESMAECIMENTO E DESLIZE SOLICITADA */
             transition: all 0.3s ease;
             opacity: 0.8;
             border-left: 3px solid transparent;
+            font-weight: 600;
         }
-        .nav-link i { margin-right: 12px; font-size: 1.2rem; color: var(--cm-gold); transition: 0.3s; }
+        .nav-link i { margin-right: 12px; font-size: 1.3rem; color: var(--cm-gold); transition: 0.3s; }
         .nav-link:hover {
             background-color: var(--cm-bg-tertiary);
             color: var(--cm-gold-bright);
             opacity: 1;
-            transform: translateX(5px); /* Desliza para direita */
-            border-left: 3px solid var(--cm-gold); /* Barra dourada aparece */
+            transform: translateX(5px);
+            border-left: 3px solid var(--cm-gold);
         }
         .nav-link:hover i { transform: scale(1.1); }
 
 
-        /* --- 3. ARTICLE CENTRAL (Conteúdo Principal) --- */
+        /* --- 3. MAIN CONTENT (Central) --- */
         .central-content {
             display: flex;
             flex-direction: column;
             gap: 30px;
         }
-        .featured-article {
-            background-color: var(--cm-bg-secondary);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(132, 115, 77, 0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .article-header {
-            padding: 1.5rem 2rem;
-            border-bottom: 2px solid var(--cm-gold);
-        }
-        .article-title-h1 {
+        
+        /* NOVO H1 FORA DO ARTICLE */
+        .section-main-title {
+            font-family: var(--font-gamer);
             color: var(--cm-gold);
             text-transform: uppercase;
             font-weight: 800;
-            font-size: 2rem;
-            margin: 0;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
+            text-shadow: 0 2px 10px rgba(132, 115, 77, 0.3);
         }
-        .article-title-h1 i { margin-right: 15px; }
+        .section-main-title i { margin-right: 15px; font-size: 1.8rem;}
+
+        .featured-article {
+            background-color: var(--cm-bg-secondary);
+            border-radius: 16px; /* Bordas mais arredondadas */
+            overflow: hidden;
+            border: 1px solid rgba(132, 115, 77, 0.2);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            transition: transform 0.3s;
+        }
+        .featured-article:hover { transform: translateY(-3px); }
         
-        /* Container da Imagem do Jogo */
+        /* (Removemos o .article-header que tinha o H1 antigo) */
+        
         .game-image-container {
             width: 100%;
-            height: 400px; /* Altura fixa para destaque */
+            height: 450px; /* Um pouco mais alto */
             position: relative;
             background-color: #000;
         }
         .game-feature-img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Garante que a imagem preencha sem distorcer */
-            object-position: center top;
-            opacity: 0.9;
+            object-fit: cover;
+            object-position: center center;
+            opacity: 0.85; /* Um pouco mais escuro para destacar o texto */
         }
-        /* Overlay para texto sobre a imagem */
         .game-overlay-info {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            padding: 2rem;
-            background: linear-gradient(to top, var(--cm-bg-main), transparent);
+            padding: 3rem 2rem; /* Mais espaçamento */
+            background: linear-gradient(to top, var(--cm-bg-main) 10%, transparent);
         }
-        .game-name-overlay { font-size: 2.5rem; color: var(--cm-gold); font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+        .game-name-overlay { 
+            font-family: var(--font-gamer);
+            font-size: 3.5rem; /* Bem grande */
+            color: var(--cm-gold); 
+            font-weight: 900; 
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
+            line-height: 1;
+            text-transform: uppercase;
+        }
         
-        .article-body { padding: 2rem; }
+        .article-body { padding: 2.5rem; }
         .article-description {
-            font-size: 1.1rem;
-            line-height: 1.6;
+            font-size: 1.15rem;
+            line-height: 1.7;
             color: var(--cm-text-light);
         }
         .highlight-gold { color: var(--cm-gold-bright); font-weight: bold; }
 
-        /* --- CTAs (ABAIXO DO ARTIGO CENTRAL) --- */
+        /* --- CTAs --- */
         .cta-section {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Cards um pouco mais largos */
+            gap: 25px;
         }
         .cta-card {
             background: linear-gradient(145deg, var(--cm-bg-secondary), var(--cm-bg-tertiary));
-            padding: 2rem;
-            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
             text-align: center;
-            border: 1px solid rgba(132, 115, 77, 0.3);
-            transition: 0.3s;
+            border: 1px solid rgba(132, 115, 77, 0.2);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
+            overflow: hidden;
         }
-        .cta-card:hover { transform: translateY(-5px); border-color: var(--cm-gold); box-shadow: 0 5px 20px rgba(132, 115, 77, 0.2); }
-        .cta-icon { font-size: 3rem; color: var(--cm-gold); margin-bottom: 1rem; }
-        .cta-title { font-weight: bold; margin-bottom: 0.5rem; color: white; }
-        .cta-text { font-size: 0.9rem; color: var(--cm-text-muted); margin-bottom: 1.5rem; }
-        .btn-cta-gold {
-            background-color: var(--cm-gold);
-            color: var(--cm-bg-main);
-            padding: 0.8rem 1.5rem;
-            border-radius: 4px;
-            font-weight: bold;
+        /* Efeito de brilho no hover dos cards */
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(132, 115, 77, 0.1), transparent);
+            opacity: 0; transition: 0.4s;
+        }
+        .cta-card:hover { 
+            transform: translateY(-8px); 
+            border-color: var(--cm-gold); 
+            box-shadow: 0 10px 30px rgba(132, 115, 77, 0.25);
+        }
+        .cta-card:hover::before { opacity: 1; }
+
+        .cta-icon { font-size: 3.5rem; color: var(--cm-gold); margin-bottom: 1rem; }
+        .cta-title { font-family: var(--font-gamer); font-size: 1.5rem; font-weight: 800; margin-bottom: 0.8rem; color: white; text-transform: uppercase; }
+        .cta-text { font-size: 1rem; color: var(--cm-text-muted); margin-bottom: 2rem; flex-grow: 1;}
+        
+        .btn-cta-gold, .btn-cta-outline {
+            font-family: var(--font-gamer);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 800;
             text-transform: uppercase;
             transition: 0.3s;
             width: 100%;
             display: inline-block;
+            letter-spacing: 1px;
+            font-size: 1.1rem;
         }
-        .btn-cta-gold:hover { background-color: var(--cm-gold-bright); color: white; }
-        .btn-cta-outline {
-            border: 2px solid var(--cm-gold);
-            color: var(--cm-gold);
-            padding: 0.8rem 1.5rem;
-            border-radius: 4px;
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: 0.3s;
-            width: 100%;
-             display: inline-block;
-        }
-        .btn-cta-outline:hover { background-color: var(--cm-gold); color: var(--cm-bg-main); }
+        .btn-cta-gold { background-color: var(--cm-gold); color: var(--cm-bg-main); border: none;}
+        .btn-cta-gold:hover { background-color: var(--cm-gold-bright); color: white; box-shadow: 0 0 15px var(--cm-gold-bright); }
+        .btn-cta-outline { border: 3px solid var(--cm-gold); color: var(--cm-gold); }
+        .btn-cta-outline:hover { background-color: var(--cm-gold); color: var(--cm-bg-main); box-shadow: 0 0 15px var(--cm-gold); }
 
 
         /* --- 4. ASIDE DIRETO --- */
@@ -233,112 +274,83 @@
             background-color: var(--cm-bg-secondary);
             border-left: 1px solid rgba(132, 115, 77, 0.3);
             border-radius: 8px;
-            padding: 1.5rem;
+            padding: 2rem;
             height: fit-content;
         }
-        .aside-title { color: var(--cm-gold); border-bottom: 1px solid var(--cm-gold); padding-bottom: 0.5rem; margin-bottom: 1rem; font-size: 1.2rem; }
+        .aside-title { 
+            font-family: var(--font-gamer);
+            color: var(--cm-gold); 
+            border-bottom: 2px solid var(--cm-gold); 
+            padding-bottom: 0.8rem; 
+            margin-bottom: 1.5rem; 
+            font-size: 1.4rem; 
+            text-transform: uppercase;
+            font-weight: 700;
+        }
         .quick-link-item {
-            padding: 0.8rem 0;
+            padding: 1rem 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
             color: var(--cm-text-muted);
             transition: 0.2s;
             display: block;
+            font-weight: 500;
         }
-        .quick-link-item:hover { color: var(--cm-gold); padding-left: 5px; }
+        .quick-link-item:hover { color: var(--cm-gold-bright); padding-left: 8px; }
 
 
         /* --- 5. FOOTER RODAPÉ --- */
         .main-footer {
             background-color: var(--cm-bg-secondary);
-            border-top: 3px solid var(--cm-gold);
-            padding: 2rem;
+            border-top: 4px solid var(--cm-gold); /* Borda mais grossa */
+            padding: 3rem 2rem;
             text-align: center;
             margin-top: auto;
         }
         .footer-links {
             display: flex;
             justify-content: center;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
+            gap: 2.5rem;
+            margin-bottom: 2rem;
             flex-wrap: wrap;
         }
-        .footer-link { color: var(--cm-text-light); transition: 0.3s; font-size: 0.9rem; }
-        .footer-link:hover { color: var(--cm-gold); }
-        .footer-copy { color: var(--cm-text-muted); font-size: 0.8rem; }
+        .footer-link { color: var(--cm-text-light); transition: 0.3s; font-size: 1rem; font-weight: 500; }
+        .footer-link:hover { color: var(--cm-gold-bright); text-shadow: 0 0 10px var(--cm-gold-bright); }
+        .footer-copy { color: var(--cm-text-muted); font-size: 0.9rem; }
 
 
-        /* --- 6. WHATSAPP FLUTUANTE ICON --- */
+        /* --- 6. WHATSAPP --- */
         .whatsapp-float {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: #25d366; /* Verde oficial do Whats */
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.4);
-            z-index: 999;
-            transition: 0.3s;
-            border: 2px solid var(--cm-gold); /* Borda dourada para integrar */
+            position: fixed; bottom: 30px; right: 30px;
+            background-color: #25d366; color: white;
+            width: 65px; height: 65px; /* Um pouco maior */
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 38px; box-shadow: 4px 4px 15px rgba(0,0,0,0.5);
+            z-index: 999; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Efeito elástico */
+            border: 3px solid var(--cm-gold);
         }
-        .whatsapp-float:hover {
-            transform: scale(1.1);
-            background-color: var(--cm-gold); /* Muda para dourado ao passar o mouse */
-            color: var(--cm-bg-main);
-        }
+        .whatsapp-float:hover { transform: scale(1.15) rotate(15deg); background-color: var(--cm-gold); color: var(--cm-bg-main); }
 
-        /* --- RESPONSIVIDADE (MOBILE) --- */
+        /* --- RESPONSIVIDADE --- */
         @media (max-width: 992px) {
-            /* No tablet/mobile, o grid vira uma coluna só */
-            .layout-grid {
-                grid-template-columns: 1fr;
-                padding: 10px;
-            }
-
-            /* Esconde as sidebars do fluxo normal */
-            .sidebar-left, .sidebar-right {
-                display: none; 
-            }
-
-            /* Mostra o botão hambúrguer */
+            .main-header { padding: 1rem 1.5rem; }
+            .logo-img { height: 60px; margin-right: 10px; }
+            .logo-text { font-size: 1.8rem; }
+            
+            .layout-grid { grid-template-columns: 1fr; padding: 15px; gap: 20px; }
+            .sidebar-left, .sidebar-right { display: none; }
             .hamburger-btn { display: block; }
 
-            /* Transforma a sidebar esquerda em um menu "Drawer" off-canvas */
             .sidebar-left.active {
-                display: block;
-                position: fixed;
-                top: 70px; /* Altura do header */
-                left: 0;
-                width: 280px;
-                height: calc(100vh - 70px);
-                z-index: 99;
-                border-right: 2px solid var(--cm-gold);
-                box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-                overflow-y: auto;
-                animation: slideInLeft 0.3s ease forwards;
+                display: block; position: fixed; top: 85px; left: 0; width: 280px; height: calc(100vh - 85px);
+                z-index: 99; border-right: 3px solid var(--cm-gold); box-shadow: 5px 0 20px rgba(0,0,0,0.7);
+                overflow-y: auto; animation: slideInLeft 0.3s ease forwards; background-color: var(--cm-bg-main);
             }
-            
-            /* Ajustes de tamanho para mobile */
-            .game-image-container { height: 250px; }
-            .article-title-h1 { font-size: 1.5rem; }
-            .game-name-overlay { font-size: 1.8rem; }
-            
-            /* A sidebar direita pode ir para baixo do conteúdo principal se quiser */
-            .sidebar-right-mobile-view {
-                 display: block;
-                 margin-top: 30px;
-            }
+            .game-image-container { height: 280px; }
+            .section-main-title { font-size: 1.8rem; }
+            .game-name-overlay { font-size: 2.2rem; }
+            .sidebar-right-mobile-view { display: block; margin-top: 30px; }
         }
-
-        @keyframes slideInLeft {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
-        }
+        @keyframes slideInLeft { from { transform: translateX(-100%); } to { transform: translateX(0); } }
     </style>
 </head>
 <body>
@@ -346,7 +358,6 @@
     <header class="main-header">
         <div class="logo-container">
             <img src="/images/logo-campmanager.png" alt="CampManager Logo" class="logo-img">
-            
             <span class="logo-text">CampManager</span>
         </div>
         <i class="bi bi-list hamburger-btn" onclick="toggleMenu()"></i>
@@ -355,79 +366,47 @@
     <div class="layout-grid">
 
         <nav class="sidebar-left" id="sidebarMenu">
-            <div class="nav-menu-title">Navegação Principal</div>
+            <div class="nav-menu-title">Navegação</div>
             <ul>
                 <li class="nav-item">
                     <a href="/jogos" class="nav-link active" style="border-left: 3px solid var(--cm-gold); opacity: 1; color: var(--cm-gold-bright);">
                         <i class="bi bi-house-door-fill"></i> Home
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="/jogos/novo" class="nav-link">
-                        <i class="bi bi-controller"></i> Novo Jogo/Camp.
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="bi bi-trophy-fill"></i> Meus Torneios
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="bi bi-people-fill"></i> Minhas Equipes
-                    </a>
-                </li>
-                <div class="nav-menu-title mt-4">Conta</div>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="bi bi-person-circle"></i> Perfil
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="bi bi-gear-fill"></i> Configurações
-                    </a>
-                </li>
-                 <li class="nav-item mt-5">
-                     <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="nav-link" style="background: none; border: none; width: 100%; cursor: pointer;">
-                             <i class="bi bi-box-arrow-left text-danger"></i> Sair
-                        </button>
-                    </form>
-                </li>
+                <li class="nav-item"><a href="/jogos/novo" class="nav-link"><i class="bi bi-controller"></i> Novo Jogo</a></li>
+                 <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-trophy-fill"></i> Torneios</a></li>
+                 <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-people-fill"></i> Equipes</a></li>
+                 <div class="nav-menu-title mt-4">Conta</div>
+                 <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-person-circle"></i> Perfil</a></li>
             </ul>
         </nav>
 
         <main class="central-content">
+            
+            <h1 class="section-main-title">
+                <i class="bi bi-fire"></i> Destaques da Temporada
+            </h1>
+
             <article class="featured-article">
-                <div class="article-header">
-                    <h1 class="article-title-h1">
-                        <i class="bi bi-stars"></i> Jogo do Mês: Destaque
-                    </h1>
-                </div>
-                
                 <div class="game-image-container">
                     <img src="https://wallpapers.com/images/high/free-fire-max-pictures-6496-x-3654-c5x43k55522k50d8.webp" 
                          alt="Destaque Free Fire" 
                          class="game-feature-img">
                     
                     <div class="game-overlay-info">
-                        <div class="game-name-overlay">FREE FIRE</div>
+                        <div class="game-name-overlay">FREE FIRE LIGA BR</div>
                     </div>
                 </div>
 
                 <div class="article-body">
                     <div class="article-description">
                         <p>
-                            O <span class="highlight-gold">Garena Free Fire</span> é o destaque absoluto deste mês no CampManager! 
-                            Conhecido por sua ação frenética e estratégia de sobrevivência, é o cenário perfeito para os competidores mais ávidos.
+                            O campo de batalha chama! O <span class="highlight-gold">Free Fire</span> assume o comando da nossa plataforma este mês. A comunidade pediu e a Liga Oficial CampManager FF está aberta.
                         </p>
                         <br>
                         <p>
-                            A <span class="highlight-gold">Liga CampManager FF</span> está em andamento. Equipes de todo o Brasil estão disputando o prêmio total e a glória de ser o campeão da temporada. O formato atual é Squad (4x4) no modo Battle Royale competitivo. Prepare suas estratégias de rotação, domine o "capa" e leve sua equipe ao Booyah!
+                            Prepare seu Squad. As inscrições para o Major de Inverno 2025 já começaram. Jogue, suba no ranking e prove que sua guilda é a número 1 do servidor.
                         </p>
-                        <br>
-                        <p>Não fique de fora dessa. O cenário competitivo espera por você.</p>
                     </div>
                 </div>
             </article>
@@ -436,71 +415,67 @@
                 <div class="cta-card">
                     <i class="bi bi-shield-plus cta-icon"></i>
                     <h3 class="cta-title">Cadastre sua Equipe</h3>
-                    <p class="cta-text">Reúna seus melhores jogadores e registre sua line-up para competir.</p>
+                    <p class="cta-text">Monte sua line-up e registre sua guilda para as ligas oficiais.</p>
                     <a href="#" class="btn-cta-gold">Registrar Squad</a>
                 </div>
                 <div class="cta-card">
                     <i class="bi bi-trophy cta-icon"></i>
-                    <h3 class="cta-title">Participar de Camp.</h3>
-                    <p class="cta-text">Veja os torneios com inscrições abertas e entre na disputa agora.</p>
-                    <a href="#" class="btn-cta-outline">Ver Torneios</a>
+                    <h3 class="cta-title">Entrar em Torneio</h3>
+                    <p class="cta-text">Inscrições abertas para a Liga FF Série B. Garanta sua vaga.</p>
+                    <a href="#" class="btn-cta-outline">Ver Inscrições</a>
                 </div>
                 <div class="cta-card">
                     <i class="bi bi-person-plus-fill cta-icon"></i>
-                    <h3 class="cta-title">Crie sua Conta</h3>
-                    <p class="cta-text">Ainda não é membro? Crie seu perfil de jogador e comece sua jornada.</p>
-                    <a href="#" class="btn-cta-outline">Criar Perfil</a>
+                    <h3 class="cta-title">Criar Conta</h3>
+                    <p class="cta-text">Novo por aqui? Crie seu perfil de jogador e comece sua carreira.</p>
+                    <a href="#" class="btn-cta-outline">Cadastrar-se</a>
                 </div>
             </section>
 
             <aside class="sidebar-right sidebar-right-mobile-view d-lg-none">
                  <h3 class="aside-title"><i class="bi bi-lightning-fill me-2"></i>Rápido</h3>
-                 <a href="#" class="quick-link-item">Regras da Temporada FF</a>
-                 <a href="#" class="quick-link-item">Ranking Geral de Equipes</a>
-                 <a href="#" class="quick-link-item">Calendário de Jogos</a>
+                 <a href="#" class="quick-link-item">Regras da Temporada FF 2025</a>
+                 <a href="#" class="quick-link-item">Ranking Geral de Guildas</a>
             </aside>
         </main>
 
         <aside class="sidebar-right d-none d-lg-block">
-            <div class="mb-4">
-                 <h3 class="aside-title"><i class="bi bi-lightning-fill me-2"></i>Acesso Rápido</h3>
-                 <a href="#" class="quick-link-item">Regras da Temporada FF</a>
-                 <a href="#" class="quick-link-item">Ranking Geral de Equipes</a>
-                 <a href="#" class="quick-link-item">Calendário de Jogos</a>
-                 <a href="#" class="quick-link-item">Reportar um Problema</a>
+            <div class="mb-5">
+                 <h3 class="aside-title"><i class="bi bi-crosshair me-2"></i>Em Alta</h3>
+                 <a href="#" class="quick-link-item">Regras da Temporada FF 2025</a>
+                 <a href="#" class="quick-link-item">Ranking Geral de Guildas</a>
+                 <a href="#" class="quick-link-item">Agenda de Scrims</a>
             </div>
             
-             <div class="mb-4">
-                 <h3 class="aside-title"><i class="bi bi-newspaper me-2"></i>Notícias</h3>
-                 <p class="text-muted fs-6 mb-2">Nova atualização de balanceamento de armas chega na próxima semana.</p>
-                 <a href="#" class="text-gold fs-6" style="text-decoration: underline;">Ler mais</a>
+             <div>
+                 <h3 class="aside-title"><i class="bi bi-megaphone me-2"></i>Patch Notes</h3>
+                 <p class="text-muted mb-3" style="font-size: 0.95rem;">Atualização OB43 traz rework em personagens e nova arma.</p>
+                 <a href="#" class="btn-cta-outline" style="font-size: 0.9rem; padding: 0.5rem 1rem;">Ler Notas</a>
             </div>
         </aside>
 
-    </div> <footer class="main-footer">
+    </div>
+
+    <footer class="main-footer">
         <div class="footer-links">
-            <a href="#" class="footer-link">Fale Conosco</a>
-            <a href="#" class="footer-link">Entenda sobre nosso aplicativo</a>
-            <a href="#" class="footer-link">Programe conosco (Carreiras)</a>
-            <a href="#" class="footer-link">Termos de Uso</a>
+            <a href="#" class="footer-link">Sobre Nós</a>
+            <a href="#" class="footer-link">Contato</a>
+            <a href="#" class="footer-link">Carreiras</a>
+            <a href="#" class="footer-link">Termos</a>
             <a href="#" class="footer-link">Privacidade</a>
         </div>
         <div class="footer-copy">
-            &copy; 2023 CampManager. Todos os direitos reservados para os Gamers.
+            &copy; 2025 CampManager. Todos os direitos reservados para os Gamers.
         </div>
     </footer>
 
-    <a href="https://api.whatsapp.com/send?phone=SEU_NUMERO_AQUI&text=Olá! Vim pelo app CampManager." 
-       class="whatsapp-float" 
-       target="_blank"
-       title="Fale conosco no WhatsApp">
+    <a href="https://api.whatsapp.com/send?phone=SEU_NUMERO&text=Olá!" class="whatsapp-float" target="_blank">
         <i class="bi bi-whatsapp"></i>
     </a>
 
     <script>
         function toggleMenu() {
-            const sidebar = document.getElementById('sidebarMenu');
-            sidebar.classList.toggle('active');
+            document.getElementById('sidebarMenu').classList.toggle('active');
         }
     </script>
 

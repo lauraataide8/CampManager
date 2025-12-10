@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>CampManager | Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- MESMO CSS DA INDEX --- */
+        :root {
+            --cm-bg-main: #051228;
+            --cm-bg-secondary: #022143; 
+            --cm-bg-tertiary: #011531;
+            --cm-gold: #84734d;
+            --cm-gold-bright: #a89465;
+            --cm-text-light: #e6e6e6;
+            --font-gamer: 'Rajdhani', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--cm-bg-main);
+            color: var(--cm-text-light);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(circle at center, #0a1f3f 0%, #051228 70%);
+        }
+
+        /* Card de Login */
+        .login-card {
+            background-color: var(--cm-bg-secondary);
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 12px;
+            border: 1px solid rgba(132, 115, 77, 0.3);
+            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+
+        .logo-img { height: 80px; margin-bottom: 1rem; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); }
+        
+        h2 {
+            font-family: var(--font-gamer);
+            color: var(--cm-gold);
+            text-transform: uppercase;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 10px rgba(132, 115, 77, 0.2);
+        }
+
+        /* Inputs Estilizados */
+        .input-group { margin-bottom: 1.5rem; text-align: left; }
+        label { font-weight: 600; margin-bottom: 0.5rem; display: block; color: var(--cm-gold); font-family: var(--font-gamer); text-transform: uppercase; letter-spacing: 1px;}
+        
+        input {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--cm-bg-tertiary);
+            border: 2px solid rgba(132, 115, 77, 0.3);
+            border-radius: 6px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--cm-gold); box-shadow: 0 0 10px rgba(132, 115, 77, 0.2); }
+
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--cm-gold);
+            color: var(--cm-bg-main);
+            font-family: var(--font-gamer);
+            font-weight: 800;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 1rem;
+        }
+        .btn-login:hover { background-color: var(--cm-gold-bright); color: white; transform: scale(1.02); }
+
+        .links { margin-top: 1.5rem; font-size: 0.9rem; }
+        .links a { color: var(--cm-text-light); text-decoration: none; margin: 0 10px; transition: 0.3s; }
+        .links a:hover { color: var(--cm-gold); text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <img src="/images/logo-campmanager.png" alt="Logo" class="logo-img">
+        <h2>Área do Jogador</h2>
+
+        <form action="/login" method="POST">
+            <div class="input-group">
+                <label>Email / Nickname</label>
+                <input type="text" placeholder="Digite seu usuário" required>
+            </div>
+
+            <div class="input-group">
+                <label>Senha</label>
+                <input type="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-login">Entrar</button>
+
+            <div class="links">
+                <a href="#">Esqueci a senha</a> | <a href="/cadastro-usuario" style="color: var(--cm-gold); font-weight: bold;">Criar Conta</a>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
